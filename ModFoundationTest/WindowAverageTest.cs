@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FortressCraft.ModFoundation;
 using static ModFoundationTest.TestUtil;
 

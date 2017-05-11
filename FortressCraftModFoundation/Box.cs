@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
 
 using static System.Math;
-using static FortressCraft.ModFoundation.EnumeratorUtil;
 
 namespace FortressCraft.ModFoundation.Block
 {

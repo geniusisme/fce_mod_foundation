@@ -1,6 +1,4 @@
-﻿using System;
-
-using static FortressCraft.ModFoundation.HashUtil;
+using System;
 
 namespace FortressCraft.ModFoundation.Block
 {

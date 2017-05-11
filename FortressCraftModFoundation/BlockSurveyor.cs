@@ -1,4 +1,4 @@
-﻿using FortressCraft.ModFoundation.Block;
+using FortressCraft.ModFoundation.Block;
 
 namespace FortressCraft.ModFoundation
 {

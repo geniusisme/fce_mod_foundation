@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FortressCraft.ModFoundation
 {
-    public static class HashUtil
+public static class HashUtil
 {
     static readonly int Prime = 486187739;
 

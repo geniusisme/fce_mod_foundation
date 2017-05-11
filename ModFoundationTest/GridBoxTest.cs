@@ -1,4 +1,4 @@
-﻿using FortressCraft.ModFoundation.Block;
+using FortressCraft.ModFoundation.Block;
 using FortressCraft.ModFoundation.Multiblock;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
