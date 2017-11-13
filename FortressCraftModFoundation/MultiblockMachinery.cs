@@ -41,7 +41,7 @@ public interface IControl<Machine> where Machine : MachineEntity, IControl<Machi
 /// this is base class for blocks of multiblock machine which are basically there to fill the space
 /// if you are not implementing additional interfaces, like PowerConsumer, for your control block,
 /// you do not even need to inherit, just use Filler<MyUberMachine>
-/// if you do, however, implement additional interfece, you should implement it for filler as well:
+/// if you do, however, implement additional interface, you should implement it for filler as well:
 /// class MyUberFiller : Filler<MyUberMachine>, ISuper
 /// {
 ///     void ISuper.Sup()
@@ -255,7 +255,12 @@ public static class BuilderUtil
     /// method does not check if given positions are filled with placement blocks, but they should at least be
     /// loaded into world
     /// use this method as foundation for implementing Builder interface (if BoxBuilder doesn't suit your needs)
-    public static void Build(WorldFrustrum frustrum, IEnumerable<Position> blocks, Materials materials, Position controlPosition)
+    public static void Build(
+        WorldFrustrum frustrum,
+        IEnumerable<Position> blocks,
+        Materials materials,
+        Position controlPosition,
+        Orientation orientation)
     {
         // Player builds with placement blocks, filler and control appear instead of them.
         WorldScript.mLocalPlayer.mResearch.GiveResearch(materials.Control.Type, materials.Control.Value);
@@ -266,21 +271,21 @@ public static class BuilderUtil
             if (block == controlPosition) {
                 continue;
             }
-            BuildPart(frustrum, block, materials.Filler);
+            BuildPart(frustrum, block, materials.Filler, orientation.Flags());
         }
-        BuildPart(frustrum, controlPosition, materials.Control);
+        BuildPart(frustrum, controlPosition, materials.Control, orientation.Flags());
         AudioSpeechManager.PlayStructureCompleteDelayed = true;
     }
 
-    static void BuildPart(WorldFrustrum frustrum, Position block, Block.Material material)
+    static void BuildPart(WorldFrustrum frustrum, Position block, Block.Material material, byte orientationFlags)
     {
         var segment = new FrustrumSegmentProvider(frustrum).GetSegment(block);
         if (segment == null)
         {
             Debug.Log("Attempt to build multiblock machine in non-ready segment. Always check filled boxes before build");
             return;
-        }
-        frustrum.BuildOrientation(segment, block.X, block.Y, block.Z, material.Type, material.Value, 0);
+        } Debug.Log("Orientation = " + orientationFlags.ToString());
+        frustrum.BuildOrientation(segment, block.X, block.Y, block.Z, material.Type, material.Value, orientationFlags);
     }
 }
 

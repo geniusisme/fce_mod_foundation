@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using FortressCraft.ModFoundation.Block;
 
+using UnityEngine;
+
 using Material = FortressCraft.ModFoundation.Block.Material;
 
 namespace FortressCraft.ModFoundation.Multiblock
 {
 public class FilledBoxChecker
 {
+    // Checks if box of provided size filled with provided material exists around finishing block.
+    // This clas DO NOT check if finishing block is filled itself.
     public FilledBoxChecker(
         BlockSurveyor surveyor,
         Position finishingBlock,
@@ -23,17 +27,13 @@ public class FilledBoxChecker
 
     public Box? MachineSpace()
     {
-        if (this.Surveyor.Look().At(this.FinishingBlock).Block() != this.Filler)
-        {
-            return null;
-        }
         if (this.Size == new Position(1, 1, 1))
         {
             return new Box(this.FinishingBlock, this.FinishingBlock);
         }
         this.SetupInitialSearchArea();
         if (this.SearchArea.Count == 0)
-        {
+        {Debug.Log("search area ololo");
             return null;
         }
         return DepthSearch();
@@ -45,19 +45,14 @@ public class FilledBoxChecker
         var maxExtents = this.Size.Concat(this.Size).Select((coord) => (int)(coord - 1)).ToArray();
         foreach (var direction in Direction.All())
         {
-            var toSurvey = this.FinishingBlock;
-            for (var extent = 1; extent <= maxExtents[direction.Index]; ++extent)
-            {
-                toSurvey = toSurvey + direction.Shift;
-                if (Surveyor.Look().At(toSurvey).Block() == this.Filler)
-                {
-                    box = box.Extended(direction);
-                }
-                else
-                {
-                    break;
-                }
-            }
+            var fullExtent = Enumerable
+                .Range(1, maxExtents[direction.Index])
+                .Select(extent => this.FinishingBlock + direction.Shift * extent)
+                .Select(block => this.Surveyor.Look().At(block).Block())
+                .TakeWhile(material => material == this.Filler)
+                .Count();
+
+            box = box.Extended(direction, fullExtent);
         }
         this.TryAddBoxToSearchArea(box);
         this.Box = box;
@@ -98,7 +93,7 @@ public class FilledBoxChecker
                 {
                     this.AddImpediment(impediment.Value);
                     if (this.SearchArea.Count == 0)
-                    {
+                    {Debug.Log("depth search olollo");
                         return null;
                     }
                 }

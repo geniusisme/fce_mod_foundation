@@ -35,7 +35,7 @@ public class Mod : FortressCraftMod
         var block = new Block.Material(key);
         this.BlockRegistrations[block] = creator;
         this.RegistrationData.RegisterEntityHandler(key);
-        Debug.Log("block: " + key + " registered successfully");
+        Debug.Log("block: " + key + " registered successfully as: " + block.ToString());
         return block;
     }
 
@@ -58,7 +58,7 @@ public class Mod : FortressCraftMod
             Debug.Log("multiblock " + key + " doesn't have positive volume, fix its size");
         }
         var multitype = this.RegisterMultiblockNoBuilder(key, new List<string> {"Placement"}, controlCreator, fillerCreator);
-        this.MultiblockBuilders.Add(new Multiblock.BoxBuilder(size, multitype));
+        this.MultiblockBuilders.Add(new Multiblock.BoxBuilder(size, multitype, Orientation.Identity()));
         return multitype;
     }
 
@@ -105,19 +105,16 @@ public class Mod : FortressCraftMod
     public sealed override void CreateSegmentEntity(ModCreateSegmentEntityParameters parameters, ModCreateSegmentEntityResults results)
     {
         var block = new Block.Material(parameters.Cube, parameters.Value);
-        Debug.Log("single: " + parameters.Cube + " " + parameters.Value);
-        var pos = new Position(parameters);
-        Debug.Log("place at " + pos);
         results.Entity = this.BlockRegistrations[block](parameters);
     }
 
     public sealed override void CheckForCompletedMachine(ModCheckForCompletedMachineParameters parameters)
     {
-        Debug.Log("mulit: " + parameters.CubeValue);
+        Debug.Log("check for complete");
         foreach (var builder in MultiblockBuilders)
-        { Debug.Log("in builder");
+        {
             if (builder.BuildIfPossible(parameters))
-            {
+            { Debug.Log("check success");
                 return;
             }
         }

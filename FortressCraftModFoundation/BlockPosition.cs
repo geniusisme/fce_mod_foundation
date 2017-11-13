@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FortressCraft.ModFoundation.Block
 {
@@ -104,6 +105,16 @@ public struct Position : IEnumerable<long>
     public static Position operator -(Position us, Position them)
     {
         return new Position(us.X - them.X, us.Y - them.Y, us.Z - them.Z);
+    }
+
+    public static Position operator *(Position us, int them)
+    {
+        return new Position(us.Select(c => c * them));
+    }
+
+    public static Position operator /(Position us, int them)
+    {
+        return new Position(us.Select(c => c / them));
     }
 
     public static bool operator ==(Position us, Position them)

@@ -9,16 +9,8 @@ class SegmentProviderStub : SegmentProvider
 {
     Dictionary<Position, Segment> Segments = new Dictionary<Position, Segment>();
 
-    public Segment Segment = new Segment(0, 0, 0);
-
-    public SegmentProviderStub()
-    {
-        this.Segment.mbIsEmpty = true;
-        this.Segment.PopulateEmptySegment();
-    }
-
     public Segment GetSegment(Position position)
-    {
+    {       
         var segPos = this.SegmentPosition(position);
         if (this.Segments.ContainsKey(segPos))
         {

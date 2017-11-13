@@ -68,13 +68,13 @@ public class FilledBoxCheckerTest
     {
         var nothing = new Material(1, 1);
         var space = new GridBox(new Box(new Position(10, 10, 10), new Position(42, 12, 42)));
+        foreach (var block in space.Blocks())
+        {
+            this.Provider.SetMaterial(this.Filler, block);
+        }
         var randoms = new RandomBlocks(space);
         foreach (var i in Enumerable.Range(0, 100))
         {
-            foreach (var block in space.Blocks())
-            {
-                this.Provider.SetMaterial(this.Filler, block);
-            }
             var finishingBlock = randoms.First();
             var checker = new FilledBoxChecker(this.Surveyor, finishingBlock, new Position(33, 3, 33), this.Filler);
             var emptyCount = randoms.Generator.Next(15) + 1;
@@ -84,6 +84,10 @@ public class FilledBoxCheckerTest
                 this.Provider.SetMaterial(nothing, empty);
             }
             Assert.AreEqual(null, checker.MachineSpace());
+            foreach(var empty in empties)
+            {
+                this.Provider.SetMaterial(this.Filler, empty);
+            }
         }
     }
 
@@ -92,32 +96,34 @@ public class FilledBoxCheckerTest
     {
         var nothing = new Material(1, 1);
         var space = new GridBox(new Box(new Position(10, 10, 10), new Position(28, 36, 28)));
+        foreach (var block in space.Blocks())
+        {
+            this.Provider.SetMaterial(this.Filler, block);
+        }
         var size = new Position(9, 13, 9);
+        var toFind = new Box(new Position(15, 17, 15), new Position(23, 29, 23));
         var randoms = new RandomBlocks(space);
         foreach (var i in Enumerable.Range(0, 100))
         {
-            foreach (var block in space.Blocks())
-            {
-                this.Provider.SetMaterial(this.Filler, block);
-            }
-                var finishingBlock = new Position(10, 10, 10) + size;
+            var finishingBlock = randoms
+                .Where(b => toFind.Outfits(new Box(b, b)))
+                .First();
 
             var checker = new FilledBoxChecker(this.Surveyor, finishingBlock, size, this.Filler);
 
-            var first = randoms
-                .Where(b => new Box(b, finishingBlock).FitsIn(size))
-                .First();
-            var second =  randoms
-                .Where(b => new Box(b, finishingBlock).FitsIn(size))
-                .Where(b => {
-                    var box = new Box(b, first);
-                    return box.Outfits(size) && !box.FitsIn(size);})
-                .First();
-
-            this.Provider.SetMaterial(nothing, first);
-            this.Provider.SetMaterial(nothing, second);
+            var emptyCount = randoms.Generator.Next(15) + 1;
+            var empties = randoms.Where(b => !toFind.Outfits(new Box(b, b))).Take(emptyCount).ToList();
+            foreach(var empty in empties)
+            {
+                this.Provider.SetMaterial(nothing, empty);
+            }
 
             Assert.IsTrue(null != checker.MachineSpace());
+
+            foreach(var empty in empties)
+            {
+                this.Provider.SetMaterial(this.Filler, empty);
+            }
         }
     }
 }

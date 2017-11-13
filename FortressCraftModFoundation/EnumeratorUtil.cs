@@ -66,7 +66,19 @@ public static class EnumeratorUtil
         return seq.All((b) => !b);
     }
 
-    public static T? Find<T>(this IEnumerable<T> ts, Func<T, bool> pred) where T: struct
+    public static T? Find<T>(this IEnumerable<T> ts, Func<T, bool> pred, RequireStruct<T> _ = null) where T: struct
+    {
+        try
+        {
+            return ts.First(pred);
+        }
+        catch(InvalidOperationException)
+        {
+            return null;
+        }
+    }
+
+    public static T Find<T>(this IEnumerable<T> ts, Func<T, bool> pred, RequireClass<T> _ = null) where T: class
     {
         try
         {
@@ -87,5 +99,9 @@ public static class EnumeratorUtil
     {
         return new HashSet<T>(seq) ;
     }
+
+
+    public class RequireStruct<T> where T : struct { }
+    public class RequireClass<T> where T : class { }
 }
 }

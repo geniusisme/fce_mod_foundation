@@ -27,16 +27,15 @@ public struct Box
         return new Position(sum.X / 2, sum.Y / 2, sum.Z / 2);
     }
 
-    // TODO: add size of extension
-    public Box Extended(Direction direction)
+    public Box Extended(Direction direction, int extension = 1)
     {
         if (direction.Index < 3)
         {
-            return new Box(this.Min, this.Max + direction.Shift);
+            return new Box(this.Min, this.Max + direction.Shift * extension);
         }
         else
         {
-            return new Box(this.Min + direction.Shift, this.Max);
+            return new Box(this.Min + direction.Shift * extension, this.Max);
         }
     }
 

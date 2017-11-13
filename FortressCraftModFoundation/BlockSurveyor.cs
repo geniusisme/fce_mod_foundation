@@ -121,7 +121,7 @@ public class SurveyOperation
             return null;
         }
         var entity = this.Segment.SearchEntity(this.X, this.Y, this.Z);
-        if (entity.mbDelete)
+        if (entity == null || entity.mbDelete)
         {
             return null;
         }
