@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FortressCraft.ModFoundation.Block;
 
-using UnityEngine;
-
 using Material = FortressCraft.ModFoundation.Block.Material;
 
 namespace FortressCraft.ModFoundation.Multiblock
@@ -33,7 +31,7 @@ public class FilledBoxChecker
         }
         this.SetupInitialSearchArea();
         if (this.SearchArea.Count == 0)
-        {Debug.Log("search area ololo");
+        {
             return null;
         }
         return DepthSearch();
@@ -93,7 +91,7 @@ public class FilledBoxChecker
                 {
                     this.AddImpediment(impediment.Value);
                     if (this.SearchArea.Count == 0)
-                    {Debug.Log("depth search olollo");
+                    {
                         return null;
                     }
                 }

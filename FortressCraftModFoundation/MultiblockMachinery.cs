@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -115,7 +116,7 @@ public class Connector<Machine> where Machine : MachineEntity, IControl<Machine>
         if (this.LinkState != LinkState.Delinked)
         {
             this.StartDelinking();
-            this.TryToDelink();
+            this.TryToDelink(delinkSelf: false);
         }
         this.DropItem(new Position(this.Control));
     }
@@ -145,8 +146,14 @@ public class Connector<Machine> where Machine : MachineEntity, IControl<Machine>
             }
             else if (material == this.Materials.Filler)
             {
+                var filler = surveyor.Look().At(block.Value).For<Filler<Machine>>();
+                if (filler == null)
+                { // game put material in place, but not entity yet.
+                    continue;
+                }
+                filler.Control = this.Control;
+                filler.mSegment.RequestRegenerateGraphics();
                 this.Linked[block.Index] = true;
-                surveyor.Look().At(block.Value).For<Filler<Machine>>().Control = this.Control;
             }
             // block was destroyed before link process completed, so it could not call delink in OnDestroy method
             // we should do it ourselves
@@ -157,14 +164,14 @@ public class Connector<Machine> where Machine : MachineEntity, IControl<Machine>
                 return;
             }
         }
-
         if (this.Fillers.All((f) => this.Linked[f.Index]))
         {
+            this.Control.mSegment.RequestRegenerateGraphics();
             this.LinkState = LinkState.Linked;
         }
     }
 
-    void TryToDelink()
+    void TryToDelink(bool delinkSelf = true)
     {
         var surveyor = new BlockSurveyor(this.Control);
         foreach (var block in this.Fillers.Where((f) => !this.Delinked[f.Index]))
@@ -187,7 +194,7 @@ public class Connector<Machine> where Machine : MachineEntity, IControl<Machine>
             }
         }
 
-        if (this.Fillers.All((f) => this.Delinked[f.Index]))
+        if (delinkSelf && this.Fillers.All((f) => this.Delinked[f.Index]))
         {
             this.LinkState = LinkState.Delinked;
             this.Replace(this.Control);
@@ -284,7 +291,7 @@ public static class BuilderUtil
         {
             Debug.Log("Attempt to build multiblock machine in non-ready segment. Always check filled boxes before build");
             return;
-        } Debug.Log("Orientation = " + orientationFlags.ToString());
+        }
         frustrum.BuildOrientation(segment, block.X, block.Y, block.Z, material.Type, material.Value, orientationFlags);
     }
 }

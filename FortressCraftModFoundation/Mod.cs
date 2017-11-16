@@ -57,9 +57,9 @@ public class Mod : FortressCraftMod
         {
             Debug.Log("multiblock " + key + " doesn't have positive volume, fix its size");
         }
-        var multitype = this.RegisterMultiblockNoBuilder(key, new List<string> {"Placement"}, controlCreator, fillerCreator);
-        this.MultiblockBuilders.Add(new Multiblock.BoxBuilder(size, multitype, Orientation.Identity()));
-        return multitype;
+        var materials = this.RegisterMultiblockNoBuilder(key, new List<string> {"Placement"}, controlCreator, fillerCreator);
+        this.RegisterMultiblockBuilder(materials, new Multiblock.BoxBuilder(size, materials, Orientation.Identity()));
+        return materials;
     }
 
     /// register your multiblock machine if you want to see it in the game
@@ -78,8 +78,9 @@ public class Mod : FortressCraftMod
         Multiblock.Builder builder
     )
     {
-        this.MultiblockBuilders.Add(builder);
-        return RegisterMultiblockNoBuilder(key, placementSuffixes, controlCreator, fillerCreator);
+        var materials =  this.RegisterMultiblockNoBuilder(key, placementSuffixes, controlCreator, fillerCreator);
+        this.RegisterMultiblockBuilder(materials, builder);
+        return materials;
     }
 
     Multiblock.Materials RegisterMultiblockNoBuilder(
@@ -102,26 +103,30 @@ public class Mod : FortressCraftMod
         };
     }
 
+    void RegisterMultiblockBuilder(Multiblock.Materials materials, Multiblock.Builder builder)
+    {
+        foreach (var placement in materials.Placements)
+        {
+            this.MultiblockBuilders[placement] = builder;
+        }
+    }
+
     public sealed override void CreateSegmentEntity(ModCreateSegmentEntityParameters parameters, ModCreateSegmentEntityResults results)
     {
-        var block = new Block.Material(parameters.Cube, parameters.Value);
-        results.Entity = this.BlockRegistrations[block](parameters);
+        var material = new Block.Material(parameters.Cube, parameters.Value);
+        parameters.ObjectType = SpawnableObjectEnum.Num;
+        results.Entity = this.BlockRegistrations[material](parameters);
     }
 
     public sealed override void CheckForCompletedMachine(ModCheckForCompletedMachineParameters parameters)
     {
-        Debug.Log("check for complete");
-        foreach (var builder in MultiblockBuilders)
-        {
-            if (builder.BuildIfPossible(parameters))
-            { Debug.Log("check success");
-                return;
-            }
-        }
+        const int MachinePlacement = 600;
+        var material = new Block.Material(MachinePlacement, parameters.CubeValue);
+        this.MultiblockBuilders[material].BuildIfPossible(parameters);
     }
 
     Dictionary<Block.Material, EntityCreator> BlockRegistrations = new Dictionary<Block.Material, EntityCreator>();
-    List<Multiblock.Builder> MultiblockBuilders = new List<Multiblock.Builder>();
+    Dictionary<Block.Material, Multiblock.Builder> MultiblockBuilders = new Dictionary<Block.Material, Multiblock.Builder>();
     ModRegistrationData RegistrationData = new ModRegistrationData();
 }
 }
