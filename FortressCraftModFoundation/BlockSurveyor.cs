@@ -2,6 +2,8 @@ using FortressCraft.ModFoundation.Block;
 
 namespace FortressCraft.ModFoundation
 {
+// Class for querying infromation about world contents.
+// Constructors take object providing that info.
 public class BlockSurveyor
 {
     public BlockSurveyor(SegmentProvider segments)
@@ -15,6 +17,7 @@ public class BlockSurveyor
     public BlockSurveyor(FrustrumBase frustrum): this(new FrustrumSegmentProvider(frustrum))
     {}
 
+    // This is query method, chain it with query functions (see below)
     public SurveyOperation Look()
     {
         return new SurveyOperation(this.Segments);
@@ -63,6 +66,8 @@ class FrustrumSegmentProvider : SegmentProvider
     FrustrumBase Frustrum;
 }
 
+// This is result of Look() method of surveyor.
+//Chain Methods returning SurveyOperation togather, and finish with Block() or For<>
 public class SurveyOperation
 {
     public SurveyOperation(SegmentProvider segments)
@@ -92,6 +97,7 @@ public class SurveyOperation
         return this;
     }
 
+    // Contents of queried block
     public Material? Block()
     {
         if (this.IsOk)
@@ -114,6 +120,7 @@ public class SurveyOperation
         return operation;
     }
 
+    // provide Concrete entity type or interface
     public T For<T>() where T : class
     {
         if (!this.IsOk)
