@@ -62,6 +62,16 @@ public struct Direction
         }
     }
 
+    public static Direction Up()
+    {
+        return PlusY();
+    }
+
+    public static Direction Down()
+    {
+        return MinusY();
+    }
+
     public static Direction PlusX()
     {
         return MakeDirection(1, 0, 0, 0);
