@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace FortressCraft.ModFoundation
 {
+/// Provides average of measurements over last time window
 public class WindowAverage
 {
     public WindowAverage(float averagingInterval, float startingValue = 0f)
@@ -23,6 +24,7 @@ public class WindowAverage
         }
     }
 
+    /// "during this interval value was observed to be equal our measurement"
     public void AddMeasurement(float measurement, float interval)
     {
         this.SumInterval += interval;

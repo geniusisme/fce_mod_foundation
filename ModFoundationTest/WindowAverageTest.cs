@@ -35,5 +35,14 @@ public class WindowAverageTest
         ave.AddMeasurement(8f, 0.5f);
         AreClose(14f, ave.Value);
     }
+
+    [TestMethod]
+    public void AverageOfNotChanging()
+    {
+        var ave = new WindowAverage(1f);
+        ave.AddMeasurement(10f, 1f);
+        ave.AddMeasurement(10f, 0.5f);
+        AreClose(10f, ave.Value);
+    }
 }
 }
