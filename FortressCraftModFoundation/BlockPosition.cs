@@ -5,7 +5,7 @@ using System.Linq;
 namespace FortressCraft.ModFoundation.Block
 {
 public struct Position : IEnumerable<long>
-{  //TODO: multiply by scalar
+{
     public long X;
     public long Y;
     public long Z;
