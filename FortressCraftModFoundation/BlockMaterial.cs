@@ -4,7 +4,7 @@ namespace FortressCraft.ModFoundation.Block
 {
 /// represents substance making a block
 /// uniquely identified by cube type + cube value (see modding documentation)
-/// all stationary objects in the game are make from blocks, which differ by their material
+/// all stationary objects in the game are made from blocks, which differ by their material
 public struct Material
 {
     /// look up registered entries from TerrainData.xml

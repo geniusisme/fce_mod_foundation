@@ -28,7 +28,8 @@ public class Mod : FortressCraftMod
 
     /// register your block entity if you want to see it in the game
     /// provide your key from TerrainData.xml and creator for your entity, eg.
-    /// RegisterBlock(JohnDoe.AwsomeBlock, (p) => new AwsomeEntity(p))
+    /// RegisterBlock("JohnDoe.AwsomeBlock", (p) => new AwsomeEntity(p))
+    /// If block have different values, keys for all values should be registered.
     protected Block.Material RegisterBlock(string key, EntityCreator creator)
     {
         Debug.Log("registering block: " + key);
