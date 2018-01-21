@@ -25,7 +25,7 @@ public class OverloadedMachine<V> : MachineEntity
 
     public override void LowFrequencyUpdate()
     {
-        this.Vanilla.UpdatePlayerDistanceInfo();
+        this.UpdatePlayerDistanceInfo();
         this.Update(LowFrequencyThread.mrPreviousUpdateTimeStep);
         this.MarkDirtyDelayed();
     }
@@ -59,6 +59,7 @@ public class OverloadedMachine<V> : MachineEntity
     public override void DropGameObject()
     {
         this.Vanilla.DropGameObject();
+        this.mWrapper = null;
     }
 
     public override bool ShouldSave()

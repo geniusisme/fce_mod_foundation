@@ -117,8 +117,8 @@ public class Connector<Machine> where Machine : MachineEntity, IControl<Machine>
         {
             this.StartDelinking();
             this.TryToDelink(delinkSelf: false);
+            this.DropItem(new Position(this.Control));
         }
-        this.DropItem(new Position(this.Control));
     }
 
     internal void Delink(Filler<Machine> filler)
