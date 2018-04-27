@@ -26,6 +26,7 @@ public class OverloadedMachine<V> : MachineEntity
     public override void LowFrequencyUpdate()
     {
         this.UpdatePlayerDistanceInfo();
+        this.Vanilla.mnRoomID = this.mnRoomID;
         this.Update(LowFrequencyThread.mrPreviousUpdateTimeStep);
         this.MarkDirtyDelayed();
     }

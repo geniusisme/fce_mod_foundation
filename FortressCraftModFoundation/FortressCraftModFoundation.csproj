@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>C:\Users\eugeen\AppData\Local\ProjectorGames\FortressCraft\Mods\GeniusIsme.EnhancedPowerFlow\10\</OutputPath>
+    <OutputPath>C:\Users\eugeen\AppData\Local\ProjectorGames\FortressCraft\Mods\GeniusIsme.EnhancedPowerFlow\14\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
